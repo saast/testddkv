@@ -13,7 +13,7 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_page_titles(self):
         self.browser.get('http://localhost:8000')
-        self.assertIn('EKL', self.browser.title)
+        self.assertIn('EKL Kinnisvara', self.browser.title)
         self.fail('Finish the test!')
 
 if __name__ == '__main__':
