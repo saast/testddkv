@@ -20,7 +20,7 @@ class NewVisitorTest(unittest.TestCase):
 
         inputbox = self.browser.find_element_by_id('id_new_item')
         self.assertEqual(
-                inputbox.get_attributes('placeholder'),
+                inputbox.get_attribute('placeholder'),
                 'Sisesta rentniku nimi'
             )
 
@@ -31,7 +31,8 @@ class NewVisitorTest(unittest.TestCase):
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
-            any(row.text == '1: Silver' for row in rows)
+            any(row.text == '1: Silver' for row in rows),
+            "New rentnik didn't appear in table"
             )
 
         self.fail('Finish the test!')
