@@ -30,12 +30,20 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Silver' for row in rows),
-            "New rentnik didn't appear in table"
-            )
+        self.assertIn('1: Silver', [row.text for row in rows])
+
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Esta')
+        inputbox.send_keys(Keys.ENTER)
+
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Silver', [row.text for row in rows])
+        self.assertIn('2: Esta', [row.text for row in rows])
+
 
         self.fail('Finish the test!')
+
 
 if __name__ == '__main__':
     unittest.main()
