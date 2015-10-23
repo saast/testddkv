@@ -11,6 +11,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
 
     def test_page_titles(self):
         self.browser.get('http://localhost:8000')
@@ -25,21 +30,16 @@ class NewVisitorTest(unittest.TestCase):
             )
 
         inputbox.send_keys('Silver')
-
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Silver', [row.text for row in rows])
+        self.check_for_row_in_list_table('1: Silver')
 
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Esta')
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Silver', [row.text for row in rows])
-        self.assertIn('2: Esta', [row.text for row in rows])
+        self.check_for_row_in_list_table('1: Silver')
+        self.check_for_row_in_list_table('2: Esta')
 
 
         self.fail('Finish the test!')
