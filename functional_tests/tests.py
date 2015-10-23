@@ -1,8 +1,9 @@
+from django.test import LiveServerTestCase
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -18,12 +19,12 @@ class NewVisitorTest(unittest.TestCase):
 
 
     def test_page_titles(self):
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
         self.assertIn('EKL Kinnisvara', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Rentnikud', header_text)
 
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.browser.find_element_by_id('id_new_tenant')
         self.assertEqual(
                 inputbox.get_attribute('placeholder'),
                 'Sisesta rentniku nimi'
@@ -34,17 +35,28 @@ class NewVisitorTest(unittest.TestCase):
 
         self.check_for_row_in_list_table('1: Silver')
 
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.browser.find_element_by_id('id_new_tenant')
         inputbox.send_keys('Esta')
         inputbox.send_keys(Keys.ENTER)
 
         self.check_for_row_in_list_table('1: Silver')
         self.check_for_row_in_list_table('2: Esta')
 
+#        self.fail('Finish the test!')
 
-        self.fail('Finish the test!')
+    def test_estate(self):
+        # lähen estate lehele
+        self.browser.get(self.live_server_url + '/estates/')
+        # on estate lehel
+        estate_url = self.browser.current_url
+        self.assertRegex(estate_url, '/estates/+')
+
+        self.assertIn('EKL Kinnisvara', self.browser.title)
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('Kinnisvara', header_text)
 
 
-if __name__ == '__main__':
-    unittest.main()
+        # seal on lisa uus input
+        # all näitab kõiki siiani lisatud kinnisvarasid
+
 

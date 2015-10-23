@@ -1,14 +1,15 @@
 from django.shortcuts import redirect, render
-from kv.models import Item
+from kv.models import Tenant
 
 def home_page(request):
     if request.method == 'POST':
-#        new_item_lastname = request.POST.get('item_lastname', '')
-        Item.objects.create(lastname = request.POST['item_lastname'])
+#        new_tenant_lastname = request.POST.get('tenant_lastname', '')
+        Tenant.objects.create(lastname = request.POST['tenant_lastname'])
         return redirect('/')
 
-    items = Item.objects.all()
-    return render(request, 'home.html', {'items': items})
+    tenants = Tenant.objects.all()
+    return render(request, 'home.html', {'tenants': tenants})
 
 
-
+def estates(request):
+    return render(request, 'estates.html')

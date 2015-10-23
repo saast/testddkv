@@ -1,4 +1,4 @@
 from django.db import models
 
-class Item(models.Model):
+class Tenant(models.Model):
     lastname = models.TextField(default='')

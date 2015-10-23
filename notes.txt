@@ -3,8 +3,14 @@ manage.py runserver
 manage.py makemigrations
 manage.py migrate
 
-manage.py test --keepdb
+
+
+manage.py test kv --keepdb
+manage.py test functional_tests --keepdb
 
 
 
 git log --oneline
+
+saab aru, kui faili move'iti (mv test.py tests/test_one.py)
+git diff --staged -M
