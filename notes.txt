@@ -1,0 +1,10 @@
+manage.py runserver
+
+manage.py makemigrations
+manage.py migrate
+
+manage.py test --keepdb
+
+
+
+git log --oneline
