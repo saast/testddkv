@@ -30,8 +30,26 @@ class HomePageTest(TestCase):
         new_item = Item.objects.first()
         self.assertEqual(new_item.lastname, 'New Rentnik')
 
+    def test_home_page_redirects_after_POST(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['item_lastname'] = 'New Rentnik'
+
+        response = home_page(request)
+
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
+
+    def test_home_page_displays_all_list_items(self):
+        Item.objects.create(lastname = 'Uks')
+        Item.objects.create(lastname = 'Kaks')
+
+        request = HttpRequest()
+        response = home_page(request)
+
+        self.assertIn('Uks', response.content.decode())
+        self.assertIn('Kaks', response.content.decode())
+
 
 
     def test_home_page_save_item_only_when_necessary(self):
