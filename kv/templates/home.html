@@ -5,11 +5,11 @@
     <body>
         <h1>Rentnikud</h1>
         <form method="POST">
-            <input name="item_text" id="id_new_item" placeholder="Sisesta rentniku nimi" />
+            <input name="item_lastname" id="id_new_item" placeholder="Sisesta rentniku nimi" />
             {% csrf_token %}
         </form>
         <table id="id_list_table">
-            <tr><td>1: {{ new_item_text }}</td></tr>
+            <tr><td>1: {{ new_item_lastname }}</td></tr>
         </table>
     </body>
 </html>

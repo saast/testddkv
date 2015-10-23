@@ -11,26 +11,35 @@ class HomePageTest(TestCase):
         found = resolve('/')
         self.assertEqual(found.func, home_page)
 
+
     def test_home_page_returns_correct_html(self):
         request = HttpRequest()
         response = home_page(request)
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
+
     def test_home_page_can_save_a_POST_request(self):
         request = HttpRequest()
         request.method = 'POST'
-        request.POST['item_text'] = 'New Rentnik'
+        request.POST['item_lastname'] = 'New Rentnik'
 
         response = home_page(request)
 
-        self.assertIn('New Rentnik', response.content.decode())
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.lastname, 'New Rentnik')
 
-        expected_html = render_to_string(
-            'home.html',
-            {'new_item_text': 'New Rentnik'}
-        )
-        self.assertEqual(response.content.decode(), expected_html)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+
+    def test_home_page_save_item_only_when_necessary(self):
+        request = HttpRequest()
+        response = home_page(request)
+        self.assertEqual(Item.objects.count(), 0)
+
+
 
 
 class IterModelTest(TestCase):
