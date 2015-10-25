@@ -57,6 +57,20 @@ class NewVisitorTest(LiveServerTestCase):
 
 
         # seal on lisa uus input
+        inputbox = self.browser.find_element_by_id('id_new_estate')
+        self.assertEqual(
+                inputbox.get_attribute('placeholder'),
+                'Sisesta kinnisvara aadress'
+            )
+
         # all näitab kõiki siiani lisatud kinnisvarasid
+        inputbox.send_keys('Pärnu mnt 28')
+        inputbox.send_keys(Keys.ENTER)
+        self.check_for_row_in_list_table('1: Pärnu mnt 28')
 
+        inputbox = self.browser.find_element_by_id('id_new_estate')
+        inputbox.send_keys('Koidu 11')
+        inputbox.send_keys(Keys.ENTER)
 
+        self.check_for_row_in_list_table('1: Pärnu mnt 28')
+        self.check_for_row_in_list_table('2: Koidu 11')

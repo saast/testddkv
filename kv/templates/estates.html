@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>EKL Kinnisvara</title>
+    </head>
+    <body>
+        <h1>Kinnisvara</h1>
+        <form method="POST">
+            <input name="estate_address" id="id_new_estate" placeholder="Sisesta kinnisvara aadress" />
+            {% csrf_token %}
+        </form>
+        <table id="id_list_table">
+            {% for estate in estates %}
+                <tr><td>{{ forloop.counter }}: {{ estate.address }}</td></tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
+

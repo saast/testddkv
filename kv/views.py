@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from kv.models import Tenant
+from kv.models import Tenant, Estate
 
 def home_page(request):
     if request.method == 'POST':
@@ -11,5 +11,10 @@ def home_page(request):
     return render(request, 'home.html', {'tenants': tenants})
 
 
-def estates(request):
-    return render(request, 'estates.html')
+def estates_page(request):
+    if request.method == 'POST':
+        Estate.objects.create(address = request.POST['estate_address'])
+        return redirect('/estates/')
+
+    estates = Estate.objects.all()
+    return render(request, 'estates.html', {'estates': estates})
