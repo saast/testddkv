@@ -7,22 +7,32 @@ class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
+#        self.browser.implicitly_wait(3)
 
     def tearDown(self):
         self.browser.quit()
 
-    def check_for_row_in_list_table(self, row_text):
+    def check_for_row_in_table(self, row_text):
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
 
 
-    def test_page_titles(self):
+    def test_home_page_automatic_redirect_to_tenant(self):
+        self.browser.get(self.live_server_url)
+        current_url = self.browser.current_url
+        self.assertRegex(current_url, '/tenants/')
+
+
+
+    def test_tenant(self):
         self.browser.get(self.live_server_url)
         self.assertIn('EKL Kinnisvara', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Rentnikud', header_text)
+
+        tenant_url = self.browser.current_url
+        self.assertRegex(tenant_url, '/tenants/')
 
         inputbox = self.browser.find_element_by_id('id_new_tenant')
         self.assertEqual(
@@ -33,14 +43,17 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys('Silver')
         inputbox.send_keys(Keys.ENTER)
 
-        self.check_for_row_in_list_table('1: Silver')
+#        tenant_url = self.browser.current_url
+#        self.assertRegex(tenant_url, '/tenants/.+')
+
+        self.check_for_row_in_table('1: Silver')
 
         inputbox = self.browser.find_element_by_id('id_new_tenant')
         inputbox.send_keys('Esta')
         inputbox.send_keys(Keys.ENTER)
 
-        self.check_for_row_in_list_table('1: Silver')
-        self.check_for_row_in_list_table('2: Esta')
+        self.check_for_row_in_table('1: Silver')
+        self.check_for_row_in_table('2: Esta')
 
 #        self.fail('Finish the test!')
 
@@ -66,11 +79,13 @@ class NewVisitorTest(LiveServerTestCase):
         # all näitab kõiki siiani lisatud kinnisvarasid
         inputbox.send_keys('Pärnu mnt 28')
         inputbox.send_keys(Keys.ENTER)
-        self.check_for_row_in_list_table('1: Pärnu mnt 28')
+        self.check_for_row_in_table('1: Pärnu mnt 28')
 
         inputbox = self.browser.find_element_by_id('id_new_estate')
         inputbox.send_keys('Koidu 11')
         inputbox.send_keys(Keys.ENTER)
 
-        self.check_for_row_in_list_table('1: Pärnu mnt 28')
-        self.check_for_row_in_list_table('2: Koidu 11')
+        self.check_for_row_in_table('1: Pärnu mnt 28')
+        self.check_for_row_in_table('2: Koidu 11')
+
+

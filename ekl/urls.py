@@ -20,5 +20,7 @@ from kv import views
 urlpatterns = [
 #    url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'kv.views.home_page', name='home'),
-    url(r'estates', 'kv.views.estates_page', name='estates'),
+    url(r'estates/$', 'kv.views.estates_page', name='estates'),
+    url(r'tenants/$', 'kv.views.tenants_page', name='tenants'),
+    url(r'tenants/new$', 'kv.views.new_tenant', name='new_tenant'),
 ]

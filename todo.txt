@@ -1,3 +1,5 @@
-* Code smell: POST test is too long
-* Display multiple items in the table
+* url /tenant/
+    /tenant/1/
+    /tenant/new
+    /tenant/add_item
 

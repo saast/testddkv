@@ -2,13 +2,17 @@ from django.shortcuts import redirect, render
 from kv.models import Tenant, Estate
 
 def home_page(request):
-    if request.method == 'POST':
-#        new_tenant_lastname = request.POST.get('tenant_lastname', '')
-        Tenant.objects.create(lastname = request.POST['tenant_lastname'])
-        return redirect('/')
+    return redirect('/tenants/')
 
+
+def tenants_page(request):
     tenants = Tenant.objects.all()
-    return render(request, 'home.html', {'tenants': tenants})
+    return render(request, 'tenants.html', {'tenants': tenants})
+
+
+def new_tenant(request):
+    Tenant.objects.create(lastname = request.POST['tenant_lastname'])
+    return redirect('/tenants/')
 
 
 def estates_page(request):
@@ -18,3 +22,4 @@ def estates_page(request):
 
     estates = Estate.objects.all()
     return render(request, 'estates.html', {'estates': estates})
+

@@ -4,59 +4,73 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from kv.models import Tenant, Estate
 
-from kv.views import home_page, estates_page
+from kv.views import home_page, estates_page, tenants_page
 
 class HomePageTest(TestCase):
-    def test_root_url_rsolves_to_home_page_view(self):
+    def test_root_url_resolves_to_home_page_view(self):
         found = resolve('/')
         self.assertEqual(found.func, home_page)
 
-
-    def test_home_page_returns_correct_html(self):
+    def test_root_url_redirects_to_tenant_page_view(self):
         request = HttpRequest()
         response = home_page(request)
-        expected_html = render_to_string('home.html')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/tenants/')
+
+
+
+
+class TenantPageTest(TestCase):
+    def test_tenants_url_resolves_to_tenant_page_view(self):
+        found = resolve('/tenants/')
+        self.assertEqual(found.func, tenants_page)
+
+
+    def test_tenants_page_returns_correct_html(self):
+        request = HttpRequest()
+        response = tenants_page(request)
+        expected_html = render_to_string('tenants.html')
         self.assertEqual(response.content.decode(), expected_html)
 
 
-    def test_home_page_can_save_a_POST_request(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['tenant_lastname'] = 'Rentnik'
 
-        response = home_page(request)
 
+class TenantViewTest(TestCase):
+    def test_displays_all_tenants(self):
+        Tenant.objects.create(lastname = 'Üks')
+        Tenant.objects.create(lastname = 'Kaks')
+
+        response = self.client.get('/tenants/')
+
+        self.assertContains(response, 'Üks')
+        self.assertContains(response, 'Kaks')
+
+
+    def test_uses_tenants_template(self):
+        response = self.client.get('/tenants/')
+        self.assertTemplateUsed(response, 'tenants.html')
+
+
+
+
+class NewTenantTest(TestCase):
+    def test_saving_a_POST_request(self):
+        self.client.post(
+            '/tenants/new',
+            data={'tenant_lastname':'Rentnik'}
+            )
         self.assertEqual(Tenant.objects.count(), 1)
         new_tenant = Tenant.objects.first()
         self.assertEqual(new_tenant.lastname, 'Rentnik')
 
 
-    def test_home_page_redirects_after_POST(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['tenant_lastname'] = 'Rentnik'
-
-        response = home_page(request)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
-
-
-    def test_home_page_displays_all_list_tenants(self):
-        Tenant.objects.create(lastname = 'Üks')
-        Tenant.objects.create(lastname = 'Kaks')
-
-        request = HttpRequest()
-        response = home_page(request)
-
-        self.assertIn('Üks', response.content.decode())
-        self.assertIn('Kaks', response.content.decode())
-
-
-    def test_home_page_save_tenant_only_when_necessary(self):
-        request = HttpRequest()
-        response = home_page(request)
-        self.assertEqual(Tenant.objects.count(), 0)
+    def test_redirects_after_POST(self):
+        response = self.client.post(
+            '/tenants/new',
+            data={'tenant_lastname':'Rentnik'}
+            )
+        self.assertRedirects(response, '/tenants/')
 
 
 
@@ -67,7 +81,7 @@ class EstatePageTest(TestCase):
         self.assertEqual(found.func, estates_page)
 
 
-    def test_home_page_returns_correct_html(self):
+    def test_estate_page_returns_correct_html(self):
         request = HttpRequest()
         response = estates_page(request)
         expected_html = render_to_string('estates.html')
@@ -110,7 +124,7 @@ class EstatePageTest(TestCase):
 
     def test_estate_page_save_estate_only_when_necessary(self):
         request = HttpRequest()
-        response = estate_page(request)
+        response = estates_page(request)
         self.assertEqual(Estate.objects.count(), 0)
 
 
