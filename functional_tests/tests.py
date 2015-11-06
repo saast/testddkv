@@ -7,9 +7,10 @@ class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-#        self.browser.implicitly_wait(3)
+        #self.browser.implicitly_wait(1)
 
     def tearDown(self):
+        #self.browser.refresh()
         self.browser.quit()
 
     def check_for_row_in_table(self, row_text):
@@ -43,8 +44,14 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys('Silver')
         inputbox.send_keys(Keys.ENTER)
 
-#        tenant_url = self.browser.current_url
-#        self.assertRegex(tenant_url, '/tenants/.+')
+        tenant_url = self.browser.current_url
+        self.assertRegex(tenant_url, '/tenants/[0-9]+/')
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('Rentnik', header_text)
+        tenant_name = self.browser.find_element_by_id('tenant_name')
+        self.assertEqual('Silver', tenant_name.text)
+
+        self.browser.get(self.live_server_url + '/tenants/')
 
         self.check_for_row_in_table('1: Silver')
 
@@ -52,22 +59,29 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys('Esta')
         inputbox.send_keys(Keys.ENTER)
 
+        self.assertRegex(tenant_url, '/tenants/[0-9]+/')
+
+        self.browser.get(self.live_server_url + '/tenants/')
+
         self.check_for_row_in_table('1: Silver')
         self.check_for_row_in_table('2: Esta')
+
+# TEGEMATA
+# muuda rentniku
+# kinnisvara otsing
 
 #        self.fail('Finish the test!')
 
     def test_estate(self):
-        # lähen estate lehele
+        # lähen kinnisvara lehele
         self.browser.get(self.live_server_url + '/estates/')
-        # on estate lehel
+        # on kinnisvara lehel
         estate_url = self.browser.current_url
         self.assertRegex(estate_url, '/estates/+')
 
         self.assertIn('EKL Kinnisvara', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Kinnisvara', header_text)
-
 
         # seal on lisa uus input
         inputbox = self.browser.find_element_by_id('id_new_estate')
@@ -76,16 +90,41 @@ class NewVisitorTest(LiveServerTestCase):
                 'Sisesta kinnisvara aadress'
             )
 
-        # all näitab kõiki siiani lisatud kinnisvarasid
+        # lisa uus kinnisvara
         inputbox.send_keys('Pärnu mnt 28')
         inputbox.send_keys(Keys.ENTER)
+# TEGEMATA
+# kontolli kas läheb õigele lehele
+
+        # all näitab kõiki siiani lisatud kinnisvarasid
         self.check_for_row_in_table('1: Pärnu mnt 28')
 
+        # lisa teine kinnisvara
         inputbox = self.browser.find_element_by_id('id_new_estate')
         inputbox.send_keys('Koidu 11')
         inputbox.send_keys(Keys.ENTER)
 
+        # näitab mõlemat kinnisvara
         self.check_for_row_in_table('1: Pärnu mnt 28')
         self.check_for_row_in_table('2: Koidu 11')
+
+# TEGEMATA
+# Muuda kinnisvara
+
+
+
+
+    def test_contract(self):
+        pass
+        # lisa rentnik ja kinnisvara
+        # mine vaata rentniku andmeid
+        # lisa talle leping
+        # vaata, et läks õigele aadressile /contracts/id/
+        # vaata, et rentnikule lisandus leping
+
+        # vaata, kas kinnisvara nimekirjas on tekkinud kinnisvarale juurde üks rentnik
+
+
+
 
 

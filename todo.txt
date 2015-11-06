@@ -1,5 +1,25 @@
-* url /tenant/
-    /tenant/1/
-    /tenant/new
-    /tenant/add_item
+* uue rentniku lisamise leht, /tenant/add_item
+* uue rentniku lisamine eemaldada listi lehelt
+* rentniku otsimine rentnike listi lehele
+* rentniku muutmine
+* nupud!
 
+* kinnisvara listi url - url /estates/
+* kinnisvara vaatamise url - /estates/1/
+* uue kinnisvara postimise url, ei kuva midagi - /estates/new
+* uue kinnisvara lisamise leht, /estates/add_item
+* uue kinnisvara lisamine eemaldada listi lehelt
+* kinnisvara muutmine
+* nupud!
+
+* contract
+* tenantile saab lisada contracti estatega
+* uue rentniku postimise url saadab listi, kui otse peale minna - /tenants/new
+
+
+
+
+TEHTUD
+* rentnike listi url - url /tenants/
+* rentniku vaatamise url - /tenants/1/
+* uue rentniku postimise url, ei kuva midagi - /tenants/new

@@ -10,9 +10,14 @@ def tenants_page(request):
     return render(request, 'tenants.html', {'tenants': tenants})
 
 
+def tenant_page(request, tenant_id):
+    tenant = Tenant.objects.get(id = tenant_id)
+    return render(request, 'tenant.html', {'tenant': tenant})
+
+
 def new_tenant(request):
-    Tenant.objects.create(lastname = request.POST['tenant_lastname'])
-    return redirect('/tenants/')
+    tenant = Tenant.objects.create(lastname = request.POST['tenant_lastname'])
+    return redirect('/tenants/' + str(tenant.id))
 
 
 def estates_page(request):

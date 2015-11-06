@@ -47,9 +47,18 @@ class TenantViewTest(TestCase):
         self.assertContains(response, 'Kaks')
 
 
-    def test_uses_tenants_template(self):
+    def test_view_tenants_uses_tenants_template(self):
         response = self.client.get('/tenants/')
         self.assertTemplateUsed(response, 'tenants.html')
+
+
+    def test_view_tenant_uses_tenant_template(self):
+        tenant = Tenant()
+        tenant.lastname = 'First tenant lastname'
+        tenant.save()
+
+        response = self.client.get('/tenants/' + str(tenant.id) + '/')
+        self.assertTemplateUsed(response, 'tenant.html')
 
 
 
@@ -130,7 +139,7 @@ class EstatePageTest(TestCase):
 
 
 
-class IterModelTest(TestCase):
+class TenantAndEstateModelTest(TestCase):
     def test_sending_and_reciving_tenants(self):
         first_tenant = Tenant()
         first_tenant.lastname = 'First tenant lastname'
